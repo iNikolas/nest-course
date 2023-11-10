@@ -7,7 +7,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
@@ -18,14 +17,13 @@ export class CoffeesController {
   constructor(private readonly coffeesService: CoffeesService) {}
 
   @Get()
-  findAll(@Query() paginationQuery) {
-    const { limit = 0, offset = 0 } = paginationQuery;
+  findAll() {
     return this.coffeesService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    const coffee = this.coffeesService.findOne(String(id));
+    const coffee = this.coffeesService.findOne(id);
 
     if (!coffee) {
       throw new NotFoundException(`Coffe with id of '${id}' not found`);
@@ -40,12 +38,12 @@ export class CoffeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
+  update(@Param('id') id: number, @Body() updateCoffeeDto: UpdateCoffeeDto) {
     return this.coffeesService.update(id, updateCoffeeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.coffeesService.remove(id);
   }
 }
